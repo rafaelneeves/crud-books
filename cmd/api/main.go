@@ -30,7 +30,14 @@ func main() {
 
 	bookHandlers := web.NewBookHandlers(bookService)
 
-	http.HandleFunc("/hello", greet)
-	http.HandleFunc("/books", bookHandlers.GetBooks)
-	http.ListenAndServe(":8080", nil)
+	router := http.NewServeMux()
+
+	router.HandleFunc("GET /hello", greet)
+	router.HandleFunc("GET /books", bookHandlers.GetBooks)
+	router.HandleFunc("GET /books/{id}", bookHandlers.GetBookByID)
+	router.HandleFunc("POST /books", bookHandlers.CreateBook)
+	router.HandleFunc("PUT /books/{id}", bookHandlers.UpdateBook)
+	router.HandleFunc("DELETE /books/{id}", bookHandlers.DeleteBook)
+
+	http.ListenAndServe(":8080", router)
 }
